@@ -309,3 +309,19 @@ class TodoServiceTest {
         assertFalse(pending.get(1).isCompleted());
     }
 }
+    // Unit tests - Leader implementation
+    @Test
+    public void testAddTodo() {
+        TodoService service = new TodoService();
+        service.addTodo("Test Todo", "Test Description");
+        assertEquals(1, service.getTotalTodos());
+    }
+    
+    @Test
+    public void testValidateTodo() {
+        TodoService service = new TodoService();
+        assertTrue(service.validateTodo("Valid Title"));
+        assertFalse(service.validateTodo(""));
+        assertFalse(service.validateTodo(null));
+    }
+

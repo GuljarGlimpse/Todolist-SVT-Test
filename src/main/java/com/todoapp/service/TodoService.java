@@ -123,3 +123,24 @@ public class TodoService {
         return results;
     }
 
+
+    // Validation and error handling - Leader implementation
+    public boolean validateTodo(String title) {
+        return title != null && title.length() > 0;
+    }
+    
+    public void displayAllTodos() {
+        if (todos.isEmpty()) {
+            System.out.println("No todos found");
+            return;
+        }
+        System.out.println("=== All Todos ===");
+        for (Todo todo : todos) {
+            System.out.println(todo.toString());
+        }
+    }
+    
+    public int getTotalTodos() {
+        return todos.size();
+    }
+

@@ -144,3 +144,30 @@ public class TodoService {
         return todos.size();
     }
 
+
+    // Advanced operations - Leader implementation
+    public List<Todo> filterTodosByStatus(String status) {
+        List<Todo> filtered = new ArrayList<>();
+        for (Todo todo : todos) {
+            if (status.equals(todo.getStatus())) {
+                filtered.add(todo);
+            }
+        }
+        return filtered;
+    }
+    
+    public boolean markTodoAsCompleted(int id) {
+        for (Todo todo : todos) {
+            if (todo.getId() == id) {
+                todo.setStatus("COMPLETED");
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    public void clearAllTodos() {
+        todos.clear();
+        System.out.println("All todos cleared successfully");
+    }
+

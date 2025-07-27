@@ -1,0 +1,7 @@
+id,title,description,shouldComplete
+1,Buy groceries,Get milk and bread,true
+2,Call mom,Weekly check-in call,false
+3,Exercise,Go for a 30-minute run,true
+4,Read book,Finish chapter 5,false
+5,Meeting prep,Prepare slides for presentation,true
+6,Pay bills,Monthly utility bills,true

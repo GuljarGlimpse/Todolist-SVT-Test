@@ -1,0 +1,7 @@
+title,description,completed,filterType,shouldBeIncluded
+Buy milk,From grocery store,true,completed,true
+Call doctor,Book appointment,false,completed,false
+Exercise,Go for run,true,pending,false
+Read book,Finish novel,false,pending,true
+Cook dinner,Prepare meal,true,all,true
+Study Java,Learn new concepts,false,all,true

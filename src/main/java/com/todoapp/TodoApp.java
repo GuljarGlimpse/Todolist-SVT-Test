@@ -29,3 +29,27 @@ public void showMainMenu() {
     System.out.println("5. Exit");
 }
 
+
+    // User input handling - Leader implementation
+    public void handleUserInput(int choice) {
+        switch(choice) {
+            case 1:
+                System.out.println("Adding new todo...");
+                break;
+            case 2:
+                System.out.println("Displaying all todos...");
+                break;
+            case 3:
+                System.out.println("Updating todo...");
+                break;
+            case 4:
+                System.out.println("Deleting todo...");
+                break;
+            case 5:
+                System.out.println("Goodbye!");
+                break;
+            default:
+                System.out.println("Invalid choice!");
+        }
+    }
+

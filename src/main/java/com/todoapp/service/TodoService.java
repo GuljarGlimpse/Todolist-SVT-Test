@@ -103,3 +103,23 @@ public class TodoService {
         nextId = 1;
     }
 }
+
+    public Todo getTodoById(int id) {
+        for (Todo todo : todos) {
+            if (todo.getId() == id) {
+                return todo;
+            }
+        }
+        return null;
+    }
+    
+    public List<Todo> searchTodos(String keyword) {
+        List<Todo> results = new ArrayList<>();
+        for (Todo todo : todos) {
+            if (todo.getTitle().contains(keyword)) {
+                results.add(todo);
+            }
+        }
+        return results;
+    }
+

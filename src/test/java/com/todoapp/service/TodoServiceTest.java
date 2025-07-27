@@ -325,3 +325,33 @@ class TodoServiceTest {
         assertFalse(service.validateTodo(null));
     }
 
+
+import org.junit.Test;
+import static org.junit.Assert.*;
+
+public class TodoServiceTest {
+    
+    @Test
+    public void testAddTodo() {
+        TodoService service = new TodoService();
+        service.addTodo("Test Todo", "Test Description");
+        assertEquals(1, service.getTotalTodos());
+    }
+    
+    @Test
+    public void testDeleteTodo() {
+        TodoService service = new TodoService();
+        service.addTodo("Test Todo", "Description");
+        assertTrue(service.deleteTodo(1));
+        assertEquals(0, service.getTotalTodos());
+    }
+    
+    @Test
+    public void testSearchTodos() {
+        TodoService service = new TodoService();
+        service.addTodo("Important Task", "Very important");
+        service.addTodo("Simple Task", "Not important");
+        assertEquals(1, service.searchTodos("Important").size());
+    }
+}
+

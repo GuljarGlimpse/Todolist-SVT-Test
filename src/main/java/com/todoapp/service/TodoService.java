@@ -1,32 +1,31 @@
 package com.todoapp.service;
 
 import com.todoapp.model.Todo;
+import com.todoapp.model.TodoFactory;
 import java.util.*;
 import java.util.stream.Collectors;
 
 public class TodoService {
-    
-    // 1. Private static instance
+
+
     private static TodoService instance;
 
     private List<Todo> todos;
     private int nextId;
 
-    // 2. Make the constructor "private"
+
     private TodoService() {
         this.todos = new ArrayList<>();
         this.nextId = 1;
     }
 
-    // 3. Create a public static "getInstance" method
+
     public static TodoService getInstance() {
         if (instance == null) {
             instance = new TodoService();
         }
         return instance;
     }
-
-    // --- All other methods remain the same ---
 
     public Todo addTodo(String title, String description) {
         if (title == null || title.trim().isEmpty()) {
@@ -39,8 +38,8 @@ public class TodoService {
             throw new IllegalArgumentException("Description cannot exceed 500 characters");
         }
 
-        // Note: Member 2 will change this line to use a Factory
-        Todo todo = new Todo(nextId++, title.trim(), description != null ? description.trim() : "");
+
+        Todo todo = TodoFactory.createTodo(nextId++, title.trim(), description != null ? description.trim() : "");
         todos.add(todo);
         return todo;
     }

@@ -5,12 +5,25 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class TodoService {
+    
+    // 1. Create a private static instance
+    private static TodoService instance;
+
     private List<Todo> todos;
     private int nextId;
 
-    public TodoService() {
+    // 2. Make the constructor "private"
+    private TodoService() {
         this.todos = new ArrayList<>();
         this.nextId = 1;
+    }
+
+    // 3. Create a public static "getInstance" method
+    public static TodoService getInstance() {
+        if (instance == null) {
+            instance = new TodoService();
+        }
+        return instance;
     }
 
     public Todo addTodo(String title, String description) {

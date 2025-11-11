@@ -6,7 +6,7 @@ import java.util.stream.Collectors;
 
 public class TodoService {
     
-    // 1. Create a private static instance
+    // 1. Private static instance
     private static TodoService instance;
 
     private List<Todo> todos;
@@ -26,6 +26,8 @@ public class TodoService {
         return instance;
     }
 
+    // --- All other methods remain the same ---
+
     public Todo addTodo(String title, String description) {
         if (title == null || title.trim().isEmpty()) {
             throw new IllegalArgumentException("Title cannot be empty");
@@ -37,6 +39,7 @@ public class TodoService {
             throw new IllegalArgumentException("Description cannot exceed 500 characters");
         }
 
+        // Note: Member 2 will change this line to use a Factory
         Todo todo = new Todo(nextId++, title.trim(), description != null ? description.trim() : "");
         todos.add(todo);
         return todo;

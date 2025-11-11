@@ -10,7 +10,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.CsvFileSource;
 import org.junit.jupiter.params.provider.MethodSource;
-import org.mockito.Spy;
+// import org.mockito.Spy; // No longer needed on the field
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
@@ -23,11 +23,16 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 class TodoServiceTest {
 
-    @Spy
+    // 1. @Spy annotation removed from here
     private TodoService todoService;
 
+    // 2. setUp() method is updated
     @BeforeEach
     void setUp() {
+        // Get the Singleton instance and spy on it
+        todoService = spy(TodoService.getInstance());
+        
+        // Now clear all todos to reset the state for the test
         todoService.clearAllTodos();
     }
 

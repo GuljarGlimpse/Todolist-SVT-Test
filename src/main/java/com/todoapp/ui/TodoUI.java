@@ -1,60 +1,115 @@
-
-// Member 3 - Enhanced User Interface Implementation
 package com.todoapp.ui;
 
-import com.todoapp.model.Todo;
+import javax.swing.*;
+import java.awt.*;
 import java.util.List;
+import com.todoapp.model.Todo;
+import com.todoapp.service.TodoService;
+import com.todoapp.service.observer.Observer; // Pattern 1
+import com.todoapp.ui.facade.TodoFacade;     // Pattern 2
+import com.todoapp.ui.command.TodoInvoker;   // Pattern 3
+import com.todoapp.service.command.AddTodoCommand;
+import com.todoapp.service.command.DeleteTodoCommand;
 
-public class TodoUI {
-    
-    // Member 3 - Display methods
-    public void displayWelcomeMessage() {
-        System.out.println("==========================================");
-        System.out.println("    Welcome to TodoList Application     ");
-        System.out.println("==========================================");
-    }
-    
-    public void displayTodoList(List<Todo> todos) {
-        System.out.println("
-=== Your Todo List ===");
-        if (todos.isEmpty()) {
-            System.out.println("No todos found!");
-            return;
-        }
+// 1. Implement Observer
+public class TodoUI extends JFrame implements Observer {
+
+    private TodoService todoService;
+    private TodoFacade todoFacade;     // Facade
+    private TodoInvoker todoInvoker;   // Invoker
+
+    private JPanel todoContainer;
+    private JTextField inputField;
+
+    public TodoUI() {
+        this.todoService = TodoService.getInstance();
         
+        // Register as Observer
+        this.todoService.registerObserver(this);
+        
+        // Initialize Patterns
+        this.todoFacade = new TodoFacade();
+        this.todoInvoker = new TodoInvoker();
+
+        initializeUI();
+    }
+
+    private void initializeUI() {
+        setTitle("Todo App (Observer + Facade + Command)");
+        setSize(400, 500);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setLayout(new BorderLayout());
+
+        // Header
+        JLabel title = new JLabel("My Todo List", JLabel.CENTER);
+        title.setFont(new Font("Arial", Font.BOLD, 18));
+        add(title, BorderLayout.NORTH);
+
+        // List Area
+        todoContainer = new JPanel();
+        todoContainer.setLayout(new BoxLayout(todoContainer, BoxLayout.Y_AXIS));
+        add(new JScrollPane(todoContainer), BorderLayout.CENTER);
+
+        // Footer (Input + Add Button)
+        JPanel footer = new JPanel();
+        inputField = new JTextField(15);
+        JButton addButton = new JButton("Add");
+        
+        // Button Click -> Command -> Invoker
+        addButton.addActionListener(e -> {
+            String text = inputField.getText();
+            if (!text.isEmpty()) {
+                // Creates Command
+                AddTodoCommand cmd = new AddTodoCommand(todoService, text, "Created via UI");
+                // Invoker executes it
+                todoInvoker.execute(cmd);
+                inputField.setText("");
+            }
+        });
+
+        footer.add(inputField);
+        footer.add(addButton);
+        add(footer, BorderLayout.SOUTH);
+
+        refreshList();
+    }
+
+    // 2. Observer Update Method
+    @Override
+    public void update(String message) {
+        System.out.println("UI Received Update: " + message);
+        // Automatically refresh when Service notifies us
+        refreshList();
+    }
+
+    private void refreshList() {
+        todoContainer.removeAll();
+        
+        // Use Facade to get data
+        List<Todo> todos = todoFacade.getAll();
+
         for (Todo todo : todos) {
-            System.out.printf("ID: %d | %s | Status: %s | Priority: %s%n", 
-                todo.getId(), todo.getTitle(), todo.getStatus(), todo.getPriority());
+            JPanel item = new JPanel(new BorderLayout());
+            item.setBorder(BorderFactory.createMatteBorder(0,0,1,0,Color.LIGHT_GRAY));
+            item.setMaximumSize(new Dimension(400, 30));
+            
+            JLabel lbl = new JLabel(" " + todo.getTitle());
+            JButton delBtn = new JButton("X");
+            delBtn.setForeground(Color.RED);
+            delBtn.setBorderPainted(false);
+            
+            delBtn.addActionListener(e -> {
+                // Command + Invoker for delete
+                DeleteTodoCommand cmd = new DeleteTodoCommand(todoService, todo.getId());
+                todoInvoker.execute(cmd);
+            });
+
+            item.add(lbl, BorderLayout.CENTER);
+            item.add(delBtn, BorderLayout.EAST);
+            todoContainer.add(item);
         }
-    }
-    
-    // Member 3 - Sorting and filtering UI
-    public void showSortingOptions() {
-        System.out.println("
-Sort Options:");
-        System.out.println("1. Sort by Priority");
-        System.out.println("2. Sort by Status");
-        System.out.println("3. Sort by ID");
-    }
-    
-    public void showFilterOptions() {
-        System.out.println("
-Filter Options:");
-        System.out.println("1. Show Pending Tasks");
-        System.out.println("2. Show Completed Tasks");
-        System.out.println("3. Show High Priority");
-    }
-    
-    // Member 3 - Statistics display
-    public void displayStatistics(List<Todo> todos) {
-        long completed = todos.stream().filter(t -> "COMPLETED".equals(t.getStatus())).count();
-        long pending = todos.stream().filter(t -> "PENDING".equals(t.getStatus())).count();
         
-        System.out.println("
-=== Statistics ===");
-        System.out.println("Total Todos: " + todos.size());
-        System.out.println("Completed: " + completed);
-        System.out.println("Pending: " + pending);
+        todoContainer.revalidate();
+        todoContainer.repaint();
     }
 }
-
